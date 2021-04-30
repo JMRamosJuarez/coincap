@@ -17,7 +17,6 @@ export const axiosFailure = (
     };
     return {
       type: FailureType.api_response_error,
-      name: 'api_response_error',
       message: responseMessage.error,
     };
   } else if (axiosError.request) {
@@ -26,14 +25,12 @@ export const axiosFailure = (
     // http.ClientRequest in node.js
     return {
       type: FailureType.api_request_error,
-      name: 'api_request_error',
       message: 'The request was made but no response was received.',
     };
   } else {
     // Something happened in setting up the request that triggered an Error.
     return {
       type: FailureType.api_request_error,
-      name: 'api_request_error',
       message: `Something happened in setting up the request that triggered an Error, details: ${axiosError.message}.`,
     };
   }
