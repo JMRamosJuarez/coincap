@@ -74,13 +74,13 @@ export const globalStore = configureStore({
 });
 
 // State types
-export type AppDispatch = typeof globalStore.dispatch;
+export type CoinCapAppDispatch = typeof globalStore.dispatch;
 
-export type AppState = ReturnType<typeof globalStore.getState>;
+export type CoinCapAppState = ReturnType<typeof globalStore.getState>;
 
 export interface AppAsyncThunkConfig {
-  dispatch: AppDispatch;
-  state: AppState;
+  dispatch: CoinCapAppDispatch;
+  state: CoinCapAppState;
   extra: CoinCapComponent;
   rejectValue: Failure;
 }
