@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { StyleSheet, View, Image, Text, Animated } from 'react-native';
+import { tryParseNumber } from '../../data/utils/utils';
 import CoinCapAsset from '../../domain/entities/coin_cap_asset';
 
 const styles = StyleSheet.create({
@@ -79,7 +80,7 @@ const AssetListViewItem: React.FC<ItemProps> = ({ asset }: ItemProps) => {
     );
     pricesWs.onmessage = msg => {
       const jsonData = JSON.parse(msg.data);
-      const newPrice: number = jsonData[asset.id];
+      const newPrice: number = tryParseNumber(jsonData[asset.id]);
       Animated.timing(priceState.priceAnimation, {
         useNativeDriver: false,
         toValue: 1,
