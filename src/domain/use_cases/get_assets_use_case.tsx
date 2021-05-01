@@ -11,11 +11,11 @@ export default class GetAssetsUseCase extends BaseUseCase<
     super();
   }
 
-  async execute(request?: never): Promise<CoinCapAsset[]> {
+  async execute(_?: never): Promise<CoinCapAsset[]> {
     const assets = await this.repository.getAssets();
-    if (assets.length == 0) {
+    if (assets.length === 0) {
       const error: Failure = {
-        type: FailureType.empty_assets,
+        type: FailureType.EMPTY_ASSETS,
       };
       throw error;
     }

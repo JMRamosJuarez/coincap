@@ -22,7 +22,9 @@ interface AssetsListViewProps {
 
 const ItemSeparator: React.FC = () => <View style={styles.separator} />;
 
-const AssetsListView: React.FC<AssetsListViewProps> = ({ assets }) => (
+const AssetsListView: React.FC<AssetsListViewProps> = ({
+  assets,
+}: AssetsListViewProps) => (
   <FlatList
     style={styles.container}
     data={assets}

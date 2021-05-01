@@ -9,7 +9,11 @@ import CoinCapAssetContainerModel from '../models/coin_cap_asset_container_model
 import { axiosFailure, tryParseNumber } from '../utils/utils';
 
 export default class CoinCapDataSourceImpl implements CoinCapDataSource {
-  constructor(private readonly axios: AxiosInstance) {}
+  private readonly axios: AxiosInstance;
+
+  constructor(axios: AxiosInstance) {
+    this.axios = axios;
+  }
 
   async getAssets(): Promise<CoinCapAsset[]> {
     try {
@@ -17,22 +21,20 @@ export default class CoinCapDataSourceImpl implements CoinCapDataSource {
         'assets',
       );
       const assets = response.data?.data ?? [];
-      return assets.map(model => {
-        return {
-          id: model.id,
-          rank: tryParseNumber(model.rank),
-          symbol: model.symbol,
-          name: model.name,
-          supply: tryParseNumber(model.supply),
-          maxSupply: tryParseNumber(model.maxSupply),
-          marketCapUsd: tryParseNumber(model.marketCapUsd),
-          volumeUsd24Hr: tryParseNumber(model.volumeUsd24Hr),
-          priceUsd: tryParseNumber(model.priceUsd),
-          changePercent24Hr: tryParseNumber(model.changePercent24Hr),
-          vwap24Hr: tryParseNumber(model.vwap24Hr),
-          explorer: model.explorer,
-        };
-      });
+      return assets.map(model => ({
+        id: model.id,
+        rank: tryParseNumber(model.rank),
+        symbol: model.symbol,
+        name: model.name,
+        supply: tryParseNumber(model.supply),
+        maxSupply: tryParseNumber(model.maxSupply),
+        marketCapUsd: tryParseNumber(model.marketCapUsd),
+        volumeUsd24Hr: tryParseNumber(model.volumeUsd24Hr),
+        priceUsd: tryParseNumber(model.priceUsd),
+        changePercent24Hr: tryParseNumber(model.changePercent24Hr),
+        vwap24Hr: tryParseNumber(model.vwap24Hr),
+        explorer: model.explorer,
+      }));
     } catch (error) {
       const axiosError: AxiosError<CoinCapErrorModel> = error;
       throw axiosFailure(axiosError);

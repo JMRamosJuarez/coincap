@@ -38,7 +38,7 @@ describe('GetAssetsUseCase', () => {
       const failure: Failure = error;
 
       const emptyResponseError: Failure = {
-        type: FailureType.empty_assets,
+        type: FailureType.EMPTY_ASSETS,
       };
 
       expect(failure.type).toEqual(emptyResponseError.type);

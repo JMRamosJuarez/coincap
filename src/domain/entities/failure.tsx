@@ -1,8 +1,8 @@
 export enum FailureType {
-  unknown_error,
-  api_request_error,
-  api_response_error,
-  empty_assets,
+  UNKNOWN_ERROR,
+  API_REQUEST_ERROR,
+  API_RESPONSE_ERROR,
+  EMPTY_ASSETS,
 }
 
 export interface Failure {

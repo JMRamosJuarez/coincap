@@ -32,7 +32,7 @@ const assetsSlice = createSlice({
   initialState: assetsInitialState,
   reducers: {},
   extraReducers: builder => {
-    //GET ASSETS
+    // GET ASSETS
     builder.addCase(getAssetsAsyncThunk.pending, state => {
       state.baseState = { type: 'loading_state' };
     });
@@ -40,7 +40,7 @@ const assetsSlice = createSlice({
       state.baseState = {
         type: 'error_state',
         error: action.payload ?? {
-          type: FailureType.unknown_error,
+          type: FailureType.UNKNOWN_ERROR,
           message: action.error.message ?? 'unknown_error',
         },
       };
