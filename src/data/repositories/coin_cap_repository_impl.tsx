@@ -12,4 +12,8 @@ export default class CoinCapRepositoryImpl implements CoinCapRepository {
   getAssets(): Promise<CoinCapAsset[]> {
     return this.remoteDataSource.getAssets();
   }
+
+  getAssetDetail(id: string): Promise<CoinCapAsset> {
+    return this.remoteDataSource.getAssetDetail(id);
+  }
 }

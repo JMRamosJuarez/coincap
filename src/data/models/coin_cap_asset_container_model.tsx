@@ -1,6 +1,4 @@
-import CoinCapAssetModel from './coin_cap_asset_model';
-
-export default interface CoinCapAssetContainerModel {
-  data: CoinCapAssetModel[];
+export default interface DataContainerModel<T> {
+  data: T;
   timestamp: number;
 }
