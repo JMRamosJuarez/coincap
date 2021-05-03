@@ -36,7 +36,10 @@ export const axiosFailure = (
   };
 };
 
-export const tryParseNumber = (value: string): number => {
+export const tryParseNumber = (
+  value: string,
+  defaultValue: number = 0,
+): number => {
   const result = parseFloat(value);
-  return Number.isNaN(result) ? 0 : result;
+  return Number.isNaN(result) ? (defaultValue > 0 ? defaultValue : 0) : result;
 };

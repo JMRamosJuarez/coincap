@@ -2,6 +2,7 @@ import {
   configureStore,
   createAsyncThunk,
   createSlice,
+  PayloadAction,
 } from '@reduxjs/toolkit';
 import { appComponent, CoinCapComponent } from '../../../data/di/components';
 import CoinCapAsset from '../../../domain/entities/coin_cap_asset';
@@ -28,9 +29,44 @@ const getAssetsAsyncThunk = createAsyncThunk<
 });
 
 const assetsSlice = createSlice({
-  name: 'get_assets',
+  name: 'assets',
   initialState: assetsInitialState,
-  reducers: {},
+  reducers: {
+    performFilter: (state, { payload }: PayloadAction<string>) => {
+      const query = payload.trim().toLocaleLowerCase();
+      const baseState = state.baseState;
+      if (baseState.type === 'success_state') {
+        const data = baseState.data;
+        const filterData = data
+          .filter(a => {
+            const name = a.name.toLowerCase();
+            return name.search(query) !== -1;
+          })
+          .sort((a, b) => a.rank - b.rank);
+        baseState.filterState = {
+          type:
+            filterData.length > 0
+              ? 'success_filter_result'
+              : 'empty_filter_results',
+          data: filterData,
+          query: payload,
+        };
+      }
+    },
+    updatePrices: (state, { payload }: PayloadAction<any>) => {
+      const baseState = state.baseState;
+      if (baseState.type === 'success_state') {
+        baseState.previousPricesData = {
+          ...baseState.previousPricesData,
+          ...baseState.currentPricesData,
+        };
+        baseState.currentPricesData = {
+          ...baseState.currentPricesData,
+          ...payload,
+        };
+      }
+    },
+  },
   extraReducers: builder => {
     // GET ASSETS
     builder.addCase(getAssetsAsyncThunk.pending, state => {
@@ -59,6 +95,11 @@ const assetsSlice = createSlice({
 export const assetsReducer = assetsSlice.reducer;
 
 export const getAssetsAction = getAssetsAsyncThunk;
+
+export const {
+  performFilter: performFilterActionCreator,
+  updatePrices: updatePricesActionCreator,
+} = assetsSlice.actions;
 
 // Store configuration
 export const globalStore = configureStore({

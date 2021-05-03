@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
 import { StyleSheet, View, Image, Text, Animated } from 'react-native';
+import { useSelector } from 'react-redux';
 import { tryParseNumber } from '../../data/utils/utils';
 import CoinCapAsset from '../../domain/entities/coin_cap_asset';
+import { CoinCapAppState } from '../redux/reducers/app_reducers';
 
 const styles = StyleSheet.create({
   animatedBackground: {
@@ -52,54 +54,55 @@ interface ItemState {
   priceAnimation: Animated.Value;
 }
 
-const getPriceColor = (state: ItemState): string => {
-  if (state.currentPrice === state.previousPrice) {
+const getPriceColor = (oldPrice: number, newPrice: number): string => {
+  if (oldPrice === newPrice) {
     return 'rgb(255,255,255)';
   }
-  if (state.currentPrice > state.previousPrice) {
+  if (newPrice > oldPrice) {
     return 'rgb(178,223,219)';
   }
   return 'rgb(255,205,210)';
 };
 
 const AssetListViewItem: React.FC<ItemProps> = ({ asset }: ItemProps) => {
-  const [priceState, setPriceState] = useState<ItemState>({
-    previousPrice: asset.priceUsd,
-    currentPrice: asset.priceUsd,
-    priceAnimation: new Animated.Value(0),
+  const oldPrice = useSelector((state: CoinCapAppState) => {
+    const baseState = state.assets.baseState;
+    if (baseState.type === 'success_state') {
+      const pricesData = baseState.previousPricesData;
+      const assetPrice = pricesData ? pricesData[asset.id] : undefined;
+      return assetPrice
+        ? tryParseNumber(assetPrice, asset.priceUsd)
+        : asset.priceUsd;
+    }
+    return asset.priceUsd;
   });
 
-  const boxInterpolation = priceState.priceAnimation.interpolate({
+  const newPrice = useSelector((state: CoinCapAppState) => {
+    const baseState = state.assets.baseState;
+    if (baseState.type === 'success_state') {
+      const pricesData = baseState.currentPricesData;
+      const assetPrice = pricesData ? pricesData[asset.id] : undefined;
+      return assetPrice
+        ? tryParseNumber(assetPrice, asset.priceUsd)
+        : asset.priceUsd;
+    }
+    return asset.priceUsd;
+  });
+
+  const [priceAnimation] = useState(new Animated.Value(0));
+
+  const boxInterpolation = priceAnimation.interpolate({
     inputRange: [0, 1],
-    outputRange: ['rgb(255,255,255)', getPriceColor(priceState)],
+    outputRange: ['rgb(255,255,255)', getPriceColor(oldPrice, newPrice)],
   });
 
   useEffect(() => {
-    const pricesWs = new WebSocket(
-      `wss://ws.coincap.io/prices?assets=${asset.id}`,
-    );
-    pricesWs.onmessage = msg => {
-      const jsonData = JSON.parse(msg.data);
-      const newPrice: number = tryParseNumber(jsonData[asset.id]);
-      Animated.timing(priceState.priceAnimation, {
-        useNativeDriver: false,
-        toValue: 1,
-        duration: 250,
-      }).start(() => {
-        Animated.timing(priceState.priceAnimation, {
-          useNativeDriver: false,
-          toValue: 0,
-          duration: 250,
-        }).start();
-      });
-      setPriceState({
-        ...priceState,
-        previousPrice: priceState.currentPrice,
-        currentPrice: newPrice,
-      });
-    };
-    return () => pricesWs.close();
-  }, [asset]);
+    Animated.timing(priceAnimation, {
+      useNativeDriver: false,
+      toValue: 1,
+      duration: 1000,
+    }).start();
+  });
 
   return (
     <Animated.View
@@ -119,7 +122,7 @@ const AssetListViewItem: React.FC<ItemProps> = ({ asset }: ItemProps) => {
         <Text style={styles.priceLabel}>
           Price:{' '}
           <Text style={styles.priceCurrency}>
-            {priceState.currentPrice.toLocaleString('en-US', {
+            {newPrice.toLocaleString('en-US', {
               style: 'currency',
               currency: 'USD',
             })}
