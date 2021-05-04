@@ -94,7 +94,6 @@ const AssetHistoryScreen: React.FC = () => {
       start: start,
       end: end,
     };
-    console.log(request);
     dispatch(getAssetHistoryAction(request));
   }, [dispatch, asset.id]);
 
