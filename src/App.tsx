@@ -9,12 +9,19 @@ import { Provider, useDispatch } from 'react-redux';
 import {
   CoinCapAppDispatch,
   globalStore,
-  updatePricesActionCreator,
+  updatePricesAction,
 } from './presentation/redux/reducers/app_reducers';
 
 import CoinCapAssetsScreen from './presentation/screens/coin_cap_assets_screen';
+import AssetHistoryScreen from './presentation/screens/asset_history_screen';
+import CoinCapAsset from './domain/entities/coin_cap_asset';
 
-const Stack = createStackNavigator();
+export type RootStackParams = {
+  Assets: undefined;
+  AssetDetail: { asset: CoinCapAsset };
+};
+
+const Stack = createStackNavigator<RootStackParams>();
 
 const AppComponent: React.FC = () => {
   const dispatch = useDispatch<CoinCapAppDispatch>();
@@ -22,18 +29,31 @@ const AppComponent: React.FC = () => {
     const pricesWs = new WebSocket('wss://ws.coincap.io/prices?assets=ALL');
     pricesWs.onmessage = msg => {
       const jsonData = JSON.parse(msg.data);
-      dispatch(updatePricesActionCreator(jsonData));
+      dispatch(updatePricesAction(jsonData));
     };
     return () => pricesWs.close();
   }, [dispatch]);
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="tasks_screen">
+      <Stack.Navigator initialRouteName="Assets">
         <Stack.Screen
-          name="assets_screen"
+          name="Assets"
           component={CoinCapAssetsScreen}
           options={() => ({
             title: 'CoinCap',
+            headerShown: true,
+            cardStyleInterpolator: ({ current }) => ({
+              cardStyle: {
+                opacity: current.progress,
+              },
+            }),
+          })}
+        />
+        <Stack.Screen
+          name="AssetDetail"
+          component={AssetHistoryScreen}
+          options={() => ({
+            title: 'History',
             headerShown: true,
             cardStyleInterpolator: ({ current }) => ({
               cardStyle: {

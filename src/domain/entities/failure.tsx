@@ -3,8 +3,9 @@ export enum FailureType {
   API_REQUEST_ERROR,
   API_RESPONSE_ERROR,
   EMPTY_ASSETS,
-  INVALID_ASSET_ID,
+  INVALID_USE_CASE_REQUEST,
   ASSET_NOT_FOUND,
+  EMPTY_ASSET_HISTORY,
 }
 
 export interface Failure {

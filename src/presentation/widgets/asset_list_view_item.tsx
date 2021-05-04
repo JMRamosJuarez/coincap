@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
-import { StyleSheet, View, Image, Text, Animated } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  Animated,
+  TouchableOpacity,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 import { tryParseNumber } from '../../data/utils/utils';
 import CoinCapAsset from '../../domain/entities/coin_cap_asset';
@@ -46,6 +53,7 @@ const styles = StyleSheet.create({
 
 interface ItemProps {
   asset: CoinCapAsset;
+  onAssetSelected?: (asset: CoinCapAsset) => void;
 }
 
 interface ItemState {
@@ -64,9 +72,12 @@ const getPriceColor = (oldPrice: number, newPrice: number): string => {
   return 'rgb(255,205,210)';
 };
 
-const AssetListViewItem: React.FC<ItemProps> = ({ asset }: ItemProps) => {
+const AssetListViewItem: React.FC<ItemProps> = ({
+  asset,
+  onAssetSelected,
+}: ItemProps) => {
   const oldPrice = useSelector((state: CoinCapAppState) => {
-    const baseState = state.assets.baseState;
+    const baseState = state.appReducer.assetsState;
     if (baseState.type === 'success_state') {
       const pricesData = baseState.previousPricesData;
       const assetPrice = pricesData ? pricesData[asset.id] : undefined;
@@ -78,7 +89,7 @@ const AssetListViewItem: React.FC<ItemProps> = ({ asset }: ItemProps) => {
   });
 
   const newPrice = useSelector((state: CoinCapAppState) => {
-    const baseState = state.assets.baseState;
+    const baseState = state.appReducer.assetsState;
     if (baseState.type === 'success_state') {
       const pricesData = baseState.currentPricesData;
       const assetPrice = pricesData ? pricesData[asset.id] : undefined;
@@ -105,40 +116,45 @@ const AssetListViewItem: React.FC<ItemProps> = ({ asset }: ItemProps) => {
   });
 
   return (
-    <Animated.View
-      style={[
-        styles.animatedBackground,
-        { backgroundColor: boxInterpolation },
-      ]}>
-      <Image
-        source={{
-          uri: `https://static.coincap.io/assets/icons/${asset.symbol.toLowerCase()}@2x.png`,
-        }}
-        style={styles.img}
-      />
-      <View style={styles.dataContainer}>
-        <Text style={styles.assetTitle}>{asset.name}</Text>
-        <Text style={styles.assetSymbol}>{asset.symbol}</Text>
-        <Text style={styles.priceLabel}>
-          Price:{' '}
-          <Text style={styles.priceCurrency}>
-            {newPrice.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })}
+    <TouchableOpacity
+      disabled={onAssetSelected === undefined}
+      onPress={onAssetSelected ? () => onAssetSelected(asset) : undefined}
+      activeOpacity={0.4}>
+      <Animated.View
+        style={[
+          styles.animatedBackground,
+          { backgroundColor: boxInterpolation },
+        ]}>
+        <Image
+          source={{
+            uri: `https://static.coincap.io/assets/icons/${asset.symbol.toLowerCase()}@2x.png`,
+          }}
+          style={styles.img}
+        />
+        <View style={styles.dataContainer}>
+          <Text style={styles.assetTitle}>{asset.name}</Text>
+          <Text style={styles.assetSymbol}>{asset.symbol}</Text>
+          <Text style={styles.priceLabel}>
+            Price:{' '}
+            <Text style={styles.priceCurrency}>
+              {newPrice.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              })}
+            </Text>
           </Text>
-        </Text>
-        <Text style={styles.changeLabel}>
-          Change (24Hr):{' '}
-          <Text style={styles.changeCurrency}>
-            {asset.changePercent24Hr.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })}
+          <Text style={styles.changeLabel}>
+            Change (24Hr):{' '}
+            <Text style={styles.changeCurrency}>
+              {asset.changePercent24Hr.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              })}
+            </Text>
           </Text>
-        </Text>
-      </View>
-    </Animated.View>
+        </View>
+      </Animated.View>
+    </TouchableOpacity>
   );
 };
 

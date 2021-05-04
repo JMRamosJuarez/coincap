@@ -3,7 +3,7 @@ import React from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
 import CoinCapAsset from '../../domain/entities/coin_cap_asset';
-import { CoinCapFilterState } from '../redux/states/coin_cap_assets_state';
+import { CoinCapFilterState } from '../redux/states/app_state';
 import AssetListViewItem from './asset_list_view_item';
 
 const styles = StyleSheet.create({
@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
 
 interface AssetsListViewProps {
   assets: CoinCapAsset[];
+  onAssetSelected: (asset: CoinCapAsset) => void;
   filterState?: CoinCapFilterState;
 }
 
@@ -27,6 +28,7 @@ const ItemSeparator: React.FC = () => <View style={styles.separator} />;
 const AssetsListView: React.FC<AssetsListViewProps> = ({
   assets,
   filterState,
+  onAssetSelected,
 }: AssetsListViewProps) => {
   const filterStateType = filterState?.type ?? 'empty_filter_results';
   const filterData = filterState?.data ?? [];
@@ -37,7 +39,9 @@ const AssetsListView: React.FC<AssetsListViewProps> = ({
       keyExtractor={item => item.id}
       ItemSeparatorComponent={ItemSeparator}
       renderItem={({ item }) => {
-        return <AssetListViewItem asset={item} />;
+        return (
+          <AssetListViewItem asset={item} onAssetSelected={onAssetSelected} />
+        );
       }}
     />
   );

@@ -4,13 +4,16 @@ import {
   createSlice,
   PayloadAction,
 } from '@reduxjs/toolkit';
-import { appComponent, CoinCapComponent } from '../../../data/di/components';
+import { appComponent, CoinCapAppComponent } from '../../../data/di/components';
+import AssetHistoryItem from '../../../domain/entities/asset_history_item';
 import CoinCapAsset from '../../../domain/entities/coin_cap_asset';
 import { Failure, FailureType } from '../../../domain/entities/failure';
-import CoinCapAssetsState from '../states/coin_cap_assets_state';
+import GetAssetHistoryRequest from '../../../domain/entities/get_asset_history_request';
+import AppState from '../states/app_state';
 
-const assetsInitialState: CoinCapAssetsState = {
-  baseState: { type: 'waiting_state' },
+const appInitialState: AppState = {
+  assetsState: { type: 'waiting_state' },
+  assetHistoryState: { type: 'waiting_state' },
 };
 
 const getAssetsAsyncThunk = createAsyncThunk<
@@ -28,13 +31,28 @@ const getAssetsAsyncThunk = createAsyncThunk<
   }
 });
 
-const assetsSlice = createSlice({
+const getAssetHistoryAsyncThunk = createAsyncThunk<
+  AssetHistoryItem[],
+  GetAssetHistoryRequest,
+  AppAsyncThunkConfig
+>('assets/detail', async (request, thunkApi) => {
+  try {
+    const { getAssetHistoryUseCase } = thunkApi.extra;
+    return await getAssetHistoryUseCase.execute(request);
+  } catch (error) {
+    const failure: Failure = error;
+    const { rejectWithValue } = thunkApi;
+    return rejectWithValue(failure);
+  }
+});
+
+const appSlice = createSlice({
   name: 'assets',
-  initialState: assetsInitialState,
+  initialState: appInitialState,
   reducers: {
     performFilter: (state, { payload }: PayloadAction<string>) => {
       const query = payload.trim().toLocaleLowerCase();
-      const baseState = state.baseState;
+      const baseState = state.assetsState;
       if (baseState.type === 'success_state') {
         const data = baseState.data;
         const filterData = data
@@ -54,7 +72,7 @@ const assetsSlice = createSlice({
       }
     },
     updatePrices: (state, { payload }: PayloadAction<any>) => {
-      const baseState = state.baseState;
+      const baseState = state.assetsState;
       if (baseState.type === 'success_state') {
         baseState.previousPricesData = {
           ...baseState.previousPricesData,
@@ -70,10 +88,10 @@ const assetsSlice = createSlice({
   extraReducers: builder => {
     // GET ASSETS
     builder.addCase(getAssetsAsyncThunk.pending, state => {
-      state.baseState = { type: 'loading_state' };
+      state.assetsState = { type: 'loading_state' };
     });
     builder.addCase(getAssetsAsyncThunk.rejected, (state, action) => {
-      state.baseState = {
+      state.assetsState = {
         type: 'error_state',
         error: action.payload ?? {
           type: FailureType.UNKNOWN_ERROR,
@@ -83,28 +101,50 @@ const assetsSlice = createSlice({
     });
     builder.addCase(getAssetsAsyncThunk.fulfilled, (state, action) => {
       const assets = action.payload;
-      state.baseState = {
+      state.assetsState = {
         type: assets.length > 0 ? 'success_state' : 'empty_state',
         data: assets,
+      };
+    });
+
+    //GET ASSET HISTORY
+    builder.addCase(getAssetHistoryAsyncThunk.pending, state => {
+      state.assetHistoryState = { type: 'loading_state' };
+    });
+    builder.addCase(getAssetHistoryAsyncThunk.fulfilled, (state, action) => {
+      state.assetHistoryState = {
+        type: 'asset_history_state',
+        data: action.payload,
+      };
+    });
+    builder.addCase(getAssetHistoryAsyncThunk.rejected, (state, action) => {
+      state.assetHistoryState = {
+        type: 'error_state',
+        error: action.payload ?? {
+          type: FailureType.UNKNOWN_ERROR,
+          message: action.error.message ?? 'unknown_error',
+        },
       };
     });
   },
 });
 
 // Actions
-export const assetsReducer = assetsSlice.reducer;
+export const appReducer = appSlice.reducer;
 
 export const getAssetsAction = getAssetsAsyncThunk;
 
+export const getAssetHistoryAction = getAssetHistoryAsyncThunk;
+
 export const {
-  performFilter: performFilterActionCreator,
-  updatePrices: updatePricesActionCreator,
-} = assetsSlice.actions;
+  performFilter: performFilterAction,
+  updatePrices: updatePricesAction,
+} = appSlice.actions;
 
 // Store configuration
 export const globalStore = configureStore({
   reducer: {
-    assets: assetsReducer,
+    appReducer: appReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
@@ -122,6 +162,6 @@ export type CoinCapAppState = ReturnType<typeof globalStore.getState>;
 export interface AppAsyncThunkConfig {
   dispatch: CoinCapAppDispatch;
   state: CoinCapAppState;
-  extra: CoinCapComponent;
+  extra: CoinCapAppComponent;
   rejectValue: Failure;
 }

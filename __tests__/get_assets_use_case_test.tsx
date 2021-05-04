@@ -23,7 +23,7 @@ describe('GetAssetsUseCase', () => {
 
   const repository: jest.Mocked<CoinCapRepository> = {
     getAssets: jest.fn(),
-    getAssetDetail: jest.fn(),
+    getAssetHistory: jest.fn(),
   };
 
   beforeAll(() => {

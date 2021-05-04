@@ -1,4 +1,6 @@
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import React, { useEffect } from 'react';
+import { RootStackParams } from '../../App';
 
 import {
   ActivityIndicator,
@@ -13,7 +15,7 @@ import {
   CoinCapAppDispatch,
   CoinCapAppState,
   getAssetsAction,
-  performFilterActionCreator,
+  performFilterAction,
 } from '../redux/reducers/app_reducers';
 import AssetsListView from '../widgets/assets_list_view';
 
@@ -45,13 +47,14 @@ const styles = StyleSheet.create({
 
 const CoinCapAssetsComponent: React.FC = () => {
   const dispatch = useDispatch<CoinCapAppDispatch>();
+  const navigation = useNavigation<NavigationProp<RootStackParams, 'Assets'>>();
   useEffect(() => {
     dispatch(getAssetsAction());
   }, [dispatch]);
-  const baseState = useSelector(
-    (state: CoinCapAppState) => state.assets.baseState,
+  const assetsState = useSelector(
+    (state: CoinCapAppState) => state.appReducer.assetsState,
   );
-  switch (baseState.type) {
+  switch (assetsState.type) {
     case 'waiting_state':
     case 'loading_state':
       return (
@@ -66,7 +69,7 @@ const CoinCapAssetsComponent: React.FC = () => {
         </View>
       );
     case 'error_state': {
-      const { error } = baseState;
+      const { error } = assetsState;
       return (
         <View style={styles.centerContainer}>
           <Text>{error.message}</Text>
@@ -74,9 +77,15 @@ const CoinCapAssetsComponent: React.FC = () => {
       );
     }
     case 'success_state': {
-      const assets = baseState.data;
+      const assets = assetsState.data;
       return (
-        <AssetsListView assets={assets} filterState={baseState.filterState} />
+        <AssetsListView
+          assets={assets}
+          filterState={assetsState.filterState}
+          onAssetSelected={asset =>
+            navigation.navigate('AssetDetail', { asset })
+          }
+        />
       );
     }
     default:
@@ -91,7 +100,7 @@ const CoinCapAssetsComponent: React.FC = () => {
 const SearchInput: React.FC = () => {
   const dispatch = useDispatch<CoinCapAppDispatch>();
   const filterState = useSelector((state: CoinCapAppState) => {
-    const baseState = state.assets.baseState;
+    const baseState = state.appReducer.assetsState;
     return baseState.type === 'success_state' ? baseState.filterState : null;
   });
   return (
@@ -100,7 +109,7 @@ const SearchInput: React.FC = () => {
       placeholder="Search"
       editable={filterState !== null}
       value={filterState?.query ?? ''}
-      onChangeText={query => dispatch(performFilterActionCreator(query))}
+      onChangeText={query => dispatch(performFilterAction(query))}
     />
   );
 };
