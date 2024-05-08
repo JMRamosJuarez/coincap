@@ -1,0 +1,14 @@
+{
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@assets/*": ["./src/assets/*"],
+      "@core/*": ["./src/core/*"],
+      "@coin_assets/*": ["./src/coin_assets/*"],
+      "@charts/*": ["./src/charts/*"],
+      "@theme/*": ["./src/theme/*"],
+      "@localization/*": ["./src/localization/*"]
+    }
+  }
+}
