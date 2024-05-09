@@ -11,7 +11,7 @@ It also provides a complete detail of the selected asset:
 
 Support for English and Spanish, based on your device language.
 
-![english](https://github.com/JMRamosJuarez/coincap/assets/19629268/1740fffb-f5bf-4475-ae77-fdf2dbfb5041) ![spanish](https://github.com/JMRamosJuarez/coincap/assets/19629268/d5abda66-d1f1-43aa-b199-1cd420bd7d5f)
+![english-detail](https://github.com/JMRamosJuarez/coincap/assets/19629268/6a8eda87-3006-4625-8e81-d0bda229715c) ![spanish-detail](https://github.com/JMRamosJuarez/coincap/assets/19629268/ce820b93-60d6-4f8a-8fb8-5d25bb049639)
 
 ## Step 1: Create a .env.dev file
 First, you will need to create a ".env.dev" file and add this 2 variables:
