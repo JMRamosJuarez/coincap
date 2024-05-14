@@ -5,6 +5,10 @@ This app uses the [CoinCap Api V2](https://docs.coincap.io/) to display real-tim
 
 ![real-time](https://github.com/JMRamosJuarez/coincap/assets/19629268/35d3eddf-f3eb-4bcb-9ad4-a559407324d1)
 
+Search your favorite cryptocurrency
+
+![search](https://github.com/JMRamosJuarez/coincap/assets/19629268/9ee66fa3-a5c1-4996-b542-cb9f8b32c45c)
+
 It also provides a complete detail of the selected asset:
 
 ![english-detail](https://github.com/JMRamosJuarez/coincap/assets/19629268/6a8eda87-3006-4625-8e81-d0bda229715c)
