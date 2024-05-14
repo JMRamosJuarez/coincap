@@ -1,4 +1,5 @@
 export default {
+  search: 'Search',
   price: 'Price',
   market_cap: 'Market Cap.',
   vwap_24Hr: 'VWAP (24Hr)',

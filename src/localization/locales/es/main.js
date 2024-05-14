@@ -1,4 +1,5 @@
 export default {
+  search: 'Buscar',
   price: 'Precio',
   market_cap: 'Capitalización de\nmercado',
   vwap_24Hr: 'VWAP (24Hr)',

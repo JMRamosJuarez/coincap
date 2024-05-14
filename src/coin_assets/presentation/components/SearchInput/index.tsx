@@ -8,6 +8,7 @@ import {
   useSearchCoinAssetsAction,
 } from '@coin_assets/presentation/redux/actions';
 import { useAppTheme } from '@theme/index';
+import { useTranslation } from 'react-i18next';
 import { TextInput, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -15,6 +16,8 @@ const SearchInput: React.FC = () => {
   const { top } = useSafeAreaInsets();
 
   const input = useRef<TextInput>(null);
+
+  const { t } = useTranslation();
 
   const { colors } = useAppTheme();
 
@@ -55,7 +58,7 @@ const SearchInput: React.FC = () => {
         ]}
         blurOnSubmit
         returnKeyType={'search'}
-        placeholder={'Search'}
+        placeholder={t('search')}
         placeholderTextColor={colors.primary['500']}
         value={query}
         onChangeText={text => updateQuery(text.trim())}
