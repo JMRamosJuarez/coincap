@@ -13,6 +13,7 @@ import {
   getMarketsPageAsyncThunk,
 } from '@coin_assets/presentation/redux/thunks';
 import { useAppDispatch } from '@core/presentation/redux';
+import { debounce } from 'lodash';
 
 export const useGetCoinAssetsAction = () => {
   const dispatch = useAppDispatch();
@@ -22,6 +23,17 @@ export const useGetCoinAssetsAction = () => {
     },
     [dispatch],
   );
+};
+
+export const useSearchCoinAssetsAction = () => {
+  const dispatch = useAppDispatch();
+  const callback = useCallback(
+    (query: string) => {
+      dispatch(getCoinAssetsAsyncThunk({ query, page: 0, limit: 50 }));
+    },
+    [dispatch],
+  );
+  return debounce(callback, 500);
 };
 
 export const useGetCoinAssetsPageAction = () => {

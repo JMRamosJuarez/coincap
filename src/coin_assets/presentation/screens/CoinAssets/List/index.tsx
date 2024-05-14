@@ -9,11 +9,8 @@ import { useCoinAssets } from '@coin_assets/presentation/redux/selectors';
 import { styles } from '@coin_assets/presentation/screens/CoinAssets/List/styles';
 import { useAppNavigation } from '@core/presentation/navigation/AppNavigator/config';
 import { FlatList } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const CoinAssetsList: React.FC = () => {
-  const { top } = useSafeAreaInsets();
-
   const { navigate } = useAppNavigation();
 
   const data = useCoinAssets();
@@ -42,7 +39,6 @@ const CoinAssetsList: React.FC = () => {
   return (
     <FlatList
       style={styles.container}
-      contentContainerStyle={{ paddingTop: top }}
       data={data}
       initialNumToRender={50}
       maxToRenderPerBatch={50}

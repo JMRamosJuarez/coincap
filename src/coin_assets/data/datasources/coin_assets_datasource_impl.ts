@@ -23,6 +23,7 @@ export default class CoinAssetsDatasourceImpl implements CoinAssetsDatasource {
       DataContainerModel<CoinAssetModel[]>
     >('/assets', {
       params: {
+        search: request.query,
         offset: request.page * request.limit,
         limit: request.limit,
       },
