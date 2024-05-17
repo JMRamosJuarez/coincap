@@ -3,7 +3,11 @@
 
 This app uses the [CoinCap Api V2](https://docs.coincap.io/) to display real-time updates for multiple crypto-currencies.
 
-![real-time](https://github.com/JMRamosJuarez/coincap/assets/19629268/35d3eddf-f3eb-4bcb-9ad4-a559407324d1)
+![real_time](https://github.com/JMRamosJuarez/coincap/assets/19629268/d3f7897a-78cb-40c3-987d-e58822cf151f)
+
+Search your favorite cryptocurrency
+
+![search](https://github.com/JMRamosJuarez/coincap/assets/19629268/9ee66fa3-a5c1-4996-b542-cb9f8b32c45c)
 
 It also provides a complete detail of the selected asset:
 
