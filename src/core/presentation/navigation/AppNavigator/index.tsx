@@ -7,11 +7,15 @@ import { AppNavigationStack } from '@core/presentation/navigation/AppNavigator/c
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { CardStyleInterpolators } from '@react-navigation/stack';
 import { useAppTheme } from '@theme/index';
+import { hide } from 'react-native-bootsplash';
 
 const AppNavigator: React.FC = () => {
   const { colors } = useAppTheme();
   return (
     <NavigationContainer
+      onReady={() => {
+        hide({ fade: true });
+      }}
       theme={{
         ...DefaultTheme,
         colors: {
