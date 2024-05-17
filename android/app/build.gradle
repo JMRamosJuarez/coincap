@@ -127,7 +127,7 @@ android {
         debug {
             signingConfig signingConfigs.enterprise
         }
-        release {
+        enterprise {
             matchingFallbacks = ['release']
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
