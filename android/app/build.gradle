@@ -54,8 +54,8 @@ react {
 project.ext.envConfigFiles = [
     developDebug: ".env.dev",
     developEnterprise: ".env.dev",
-    productionDebug: ".env.dev",
-    productionEnterprise: ".env.dev",
+    productionDebug: ".env",
+    productionEnterprise: ".env",
 ]
 
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
