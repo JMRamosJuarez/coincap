@@ -9,7 +9,15 @@ trigger:
       - master
 
 pool:
-  vmImage: 'macos-latest'
+  vmImage: 'ubuntu-latest'
+
 
 steps:
-  - script: yarn install
+- task: YarnInstaller@3
+  inputs:
+    versionSpec: '1.x'
+
+- task: CmdLine@2
+  inputs:
+    script: |
+      yarn install
