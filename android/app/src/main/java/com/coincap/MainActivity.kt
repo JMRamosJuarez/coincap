@@ -17,8 +17,8 @@ class MainActivity : ReactActivity() {
   override fun getMainComponentName(): String = "coincap"
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    RNBootSplash.init(this, R.style.AppTheme_Splash)
     super.onCreate(null)
-    RNBootSplash.init(this, R.style.BootTheme)
   }
 
   /**
