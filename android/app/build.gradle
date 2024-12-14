@@ -55,10 +55,8 @@ react {
 }
 
 project.ext.envConfigFiles = [
-    developDebug: ".env.dev",
-    developEnterprise: ".env.dev",
-    productionDebug: ".env",
-    productionEnterprise: ".env",
+    develop: ".env.dev",
+    production: ".env",
 ]
 
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
@@ -81,6 +79,12 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+if (keystorePropertiesFile.exists()) {
+   keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -96,26 +100,23 @@ android {
         resValue "string", "build_config_package", "com.coincap"
     }
 
-    def keyStoreProperties = new Properties()
-    keyStoreProperties.load(new FileInputStream(rootProject.file("keystore.properties")))
-
     signingConfigs {
         enterprise {
             storeFile file('../certificates/app_key_store.jks')
-            storePassword keyStoreProperties['store_password']
-            keyAlias keyStoreProperties['enterprise_key_alias']
-            keyPassword keyStoreProperties['enterprise_key_password']
+            storePassword keystoreProperties['store_password']
+            keyAlias keystoreProperties['enterprise_key_alias']
+            keyPassword keystoreProperties['enterprise_key_password']
         }
         release {
             storeFile file('../certificates/app_key_store.jks')
-            storePassword keyStoreProperties['store_password']
-            keyAlias keyStoreProperties['prod_key_alias']
-            keyPassword keyStoreProperties['prod_key_password']
+            storePassword keystoreProperties['store_password']
+            keyAlias keystoreProperties['prod_key_alias']
+            keyPassword keystoreProperties['prod_key_password']
         }
     }
 
     // Specifies one flavor dimension.
-    flavorDimensions += "environment"
+    flavorDimensions "environment"
     productFlavors {
         develop {
             applicationIdSuffix ".dev"
@@ -125,7 +126,7 @@ android {
             dimension "environment"
         }
     }
-    
+
     buildTypes {
         debug {
             signingConfig signingConfigs.enterprise
@@ -135,7 +136,7 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-        }
+        }        
         release {
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
@@ -154,5 +155,3 @@ dependencies {
         implementation jscFlavor
     }
 }
-
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
