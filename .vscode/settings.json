@@ -1,3 +1,11 @@
 {
-  "typescript.preferences.importModuleSpecifier": "non-relative"
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+    "source.organizeImports": "always"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "[svg]": {
+    "editor.defaultFormatter": "jock.svg"
+  }
 }
