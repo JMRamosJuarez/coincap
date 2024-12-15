@@ -40,7 +40,7 @@ COINCAP_TOKEN=${your_develop_api_token}
 
 Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start.
 
-### For Android
+## For Android
 
 ```bash
 yarn android-{{flavor}}
@@ -58,14 +58,28 @@ yarn android-dev
 yarn android-production
 ```
 
-If everything is set up _correctly_, you should see the app running in your _Android Emulator_ shortly provided you have set up your emulator/simulator correctly.
+## For iOS
 
-This is one way to run your app — you can also run it directly from within Android Studio
+```bash
+yarn ios-{{flavor}}
+```
+
+### Android Develop
+
+```bash
+yarn ios-dev
+```
+
+### Android Production
+
+```bash
+yarn ios-production
+```
+
+If everything is set up _correctly_, you should see the app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+
+This is one way to run the app — you can also run it directly from within Android Studio and Xcode respectively.
 
 ## Congratulations! :tada:
 
 You've successfully run the App.
-
-### TODO
-
-- iOS configuration.
