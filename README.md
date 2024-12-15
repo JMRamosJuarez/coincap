@@ -18,6 +18,10 @@ Support for English and Spanish, based on your device language.
 
 ![english-detail](https://github.com/JMRamosJuarez/coincap/assets/19629268/6a8eda87-3006-4625-8e81-d0bda229715c) ![spanish-detail](https://github.com/JMRamosJuarez/coincap/assets/19629268/ce820b93-60d6-4f8a-8fb8-5d25bb049639)
 
+Support for iPad/Tablet
+
+![Coincap - iPad](https://github.com/user-attachments/assets/2ddbe02b-d6c9-4034-b958-6efe67456603)
+
 ## Step 1: Create the .env files
 
 Create the production .env file
