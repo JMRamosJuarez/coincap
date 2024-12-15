@@ -5,6 +5,7 @@ import CoinHistoryChartComponent from '@coin_assets/presentation/components/Coin
 import { useCoinHistoryState } from '@coin_assets/presentation/redux/selectors/history';
 import { useDimensions } from '@core/presentation/hooks';
 import { View } from 'react-native';
+import { isTablet } from 'react-native-device-info';
 
 const CoinHistoryChart: React.FC<{
   readonly coinAsset: CoinAsset;
@@ -13,7 +14,14 @@ const CoinHistoryChart: React.FC<{
     screen: { width, height },
   } = useDimensions();
 
-  const size = useMemo(() => Math.min(width, height), [width, height]);
+  const tablet = isTablet();
+
+  const size = useMemo(() => {
+    if (tablet) {
+      return Math.min(width * 0.65, height);
+    }
+    return Math.min(width, height);
+  }, [tablet, width, height]);
 
   const state = useCoinHistoryState(coinAsset.id);
 

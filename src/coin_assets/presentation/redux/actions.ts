@@ -1,9 +1,13 @@
 import { useCallback } from 'react';
 
+import CoinAsset from '@coin_assets/domain/entities/coin_asset';
 import CoinHistoryRequest from '@coin_assets/domain/entities/coin_history_request';
 import GetCoinAssetsRequest from '@coin_assets/domain/entities/get_coin_assets_request';
 import MarketsRequest from '@coin_assets/domain/entities/markets_request';
-import { updateCoinAssetPrices } from '@coin_assets/presentation/redux';
+import {
+  selectCoinAsset,
+  updateCoinAssetPrices,
+} from '@coin_assets/presentation/redux';
 import { CoinAssetPrices } from '@coin_assets/presentation/redux/state';
 import {
   getCoinAssetsAsyncThunk,
@@ -14,6 +18,16 @@ import {
 } from '@coin_assets/presentation/redux/thunks';
 import { useAppDispatch } from '@core/presentation/redux';
 import { debounce } from 'lodash';
+
+export const useSelectCoinAssetsAction = () => {
+  const dispatch = useAppDispatch();
+  return useCallback(
+    (request: CoinAsset) => {
+      dispatch(selectCoinAsset(request));
+    },
+    [dispatch],
+  );
+};
 
 export const useGetCoinAssetsAction = () => {
   const dispatch = useAppDispatch();

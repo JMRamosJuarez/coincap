@@ -12,6 +12,7 @@ export type CoinAssetPrices = {
 export type CoinsHistory = { [key: string]: BaseState<CoinHistory> };
 
 export interface CoinAssetsState {
+  selected?: CoinAsset;
   assets: {
     state: BaseState<CoinAsset[]>;
     pagination: {

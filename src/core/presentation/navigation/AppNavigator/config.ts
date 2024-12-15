@@ -7,7 +7,7 @@ import {
 
 export type AppStackParams = {
   CoinAssets: undefined;
-  CoinAssetDetail: { readonly coinAsset: CoinAsset };
+  CoinAssetDetail: { readonly coinAsset?: CoinAsset };
 };
 
 export type CoinAssetDetailRouteProp = RouteProp<

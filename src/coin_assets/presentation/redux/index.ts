@@ -1,3 +1,4 @@
+import CoinAsset from '@coin_assets/domain/entities/coin_asset';
 import {
   CoinAssetPrices,
   initialState,
@@ -16,6 +17,9 @@ const slice = createSlice({
   name: '/coin_assets',
   initialState,
   reducers: {
+    selectCoinAsset: (state, { payload }: PayloadAction<CoinAsset>) => {
+      state.selected = payload;
+    },
     updateCoinAssetPrices: (
       state,
       { payload }: PayloadAction<CoinAssetPrices>,
@@ -149,6 +153,6 @@ const slice = createSlice({
   },
 });
 
-export const { updateCoinAssetPrices } = slice.actions;
+export const { selectCoinAsset, updateCoinAssetPrices } = slice.actions;
 
 export const coinAssetsReducer = slice.reducer;

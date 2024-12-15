@@ -4,16 +4,24 @@ import CoinAsset from '@coin_assets/domain/entities/coin_asset';
 import CoinAssetListItem from '@coin_assets/presentation/components/CoinAssetListItem';
 import CoinAssetListItemSkeleton from '@coin_assets/presentation/components/CoinAssetListItemSkeleton';
 import { useCoinPricesSocket } from '@coin_assets/presentation/hooks';
-import { useGetCoinAssetsPageAction } from '@coin_assets/presentation/redux/actions';
+import {
+  useGetCoinAssetsPageAction,
+  useSelectCoinAssetsAction,
+} from '@coin_assets/presentation/redux/actions';
 import { useCoinAssets } from '@coin_assets/presentation/redux/selectors';
 import { styles } from '@coin_assets/presentation/screens/CoinAssets/List/styles';
 import { useAppNavigation } from '@core/presentation/navigation/AppNavigator/config';
 import { FlatList } from 'react-native';
+import { isTablet } from 'react-native-device-info';
 
 const CoinAssetsList: React.FC = () => {
   const { navigate } = useAppNavigation();
 
   const data = useCoinAssets();
+
+  const tablet = isTablet();
+
+  const selectCoinAsset = useSelectCoinAssetsAction();
 
   useCoinPricesSocket(data);
 
@@ -22,11 +30,17 @@ const CoinAssetsList: React.FC = () => {
       return (
         <CoinAssetListItem
           coinAsset={item}
-          onPress={coinAsset => navigate('CoinAssetDetail', { coinAsset })}
+          onPress={coinAsset => {
+            if (tablet) {
+              selectCoinAsset(coinAsset);
+            } else {
+              navigate('CoinAssetDetail', { coinAsset });
+            }
+          }}
         />
       );
     },
-    [navigate],
+    [tablet, selectCoinAsset, navigate],
   );
 
   const keyExtractor = useCallback(

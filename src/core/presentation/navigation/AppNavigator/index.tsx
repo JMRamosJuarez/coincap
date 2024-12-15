@@ -44,7 +44,9 @@ const AppNavigator: React.FC = () => {
               params: { coinAsset },
             },
           }) => ({
-            title: `${coinAsset.name} (${coinAsset.symbol})`,
+            title: `${coinAsset?.name || '----'} (${
+              coinAsset?.symbol || '--'
+            })`,
             headerShown: true,
             header: CoinAssetDetailHeader,
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
