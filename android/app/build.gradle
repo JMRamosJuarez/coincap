@@ -101,17 +101,17 @@ android {
     }
 
     signingConfigs {
-        enterprise {
-            storeFile file('../certificates/app_key_store.jks')
+        debug {
+            storeFile file('../certificates/app_keystore')
             storePassword keystoreProperties['store_password']
-            keyAlias keystoreProperties['enterprise_key_alias']
-            keyPassword keystoreProperties['enterprise_key_password']
+            keyAlias keystoreProperties['debug_key_alias']
+            keyPassword keystoreProperties['debug_key_password']
         }
         release {
-            storeFile file('../certificates/app_key_store.jks')
+            storeFile file('../certificates/app_keystore')
             storePassword keystoreProperties['store_password']
-            keyAlias keystoreProperties['prod_key_alias']
-            keyPassword keystoreProperties['prod_key_password']
+            keyAlias keystoreProperties['release_key_alias']
+            keyPassword keystoreProperties['release_key_password']
         }
     }
 
@@ -129,7 +129,7 @@ android {
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.enterprise
+            signingConfig signingConfigs.debug
         }
         enterprise {
             matchingFallbacks = ['release']
