@@ -138,6 +138,7 @@ android {
             signingConfig signingConfigs.debug
         }
         enterprise {
+            matchingFallbacks = ['release']
             signingConfig signingConfigs.enterprise
         }
         release {
