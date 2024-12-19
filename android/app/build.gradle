@@ -107,6 +107,12 @@ android {
             keyAlias keystoreProperties['debug_key_alias']
             keyPassword keystoreProperties['debug_key_password']
         }
+        enterprise {
+            storeFile file('../certificates/app_keystore')
+            storePassword keystoreProperties['store_password']
+            keyAlias keystoreProperties['enterprise_key_alias']
+            keyPassword keystoreProperties['enterprise_key_password']
+        }
         release {
             storeFile file('../certificates/app_keystore')
             storePassword keystoreProperties['store_password']
@@ -132,11 +138,8 @@ android {
             signingConfig signingConfigs.debug
         }
         enterprise {
-            matchingFallbacks = ['release']
-            signingConfig signingConfigs.release
-            minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-        }        
+            signingConfig signingConfigs.enterprise
+        }
         release {
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
